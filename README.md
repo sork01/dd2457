@@ -28,3 +28,28 @@ We're interested in the behaviour of the program
 We're not talking about time and space, we're interested in the interaction behaviour
 
 *what sequences of interactions, on-going behaviour, reactive systems*
+
+Implementation, transformation and correctness
+
+### Operational semantics: 
+program behaviour: states and transitions
+granularity: big-step, small-step
+
+Configurations: "state of computation" initial and final configurations
+
+Transitions between configurations relation, defined by rules
+
+Computations: sequences of transitions from initial to final configurations
+
+1. Big-step operational semantics: transitions relate initial and final configs
+
+2. Small-step operational semantics: transitions relate internal configs
+
+3. Abstract machines: execution strategy embedded into rules
+
+### Denotational semantics:
+programs as "state transformers"
+
+### Aciomatic semantics:
+programs as "predicate transformers"
+properties of states as logic assertions
