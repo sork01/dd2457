@@ -10,12 +10,12 @@ Linguistics: Syntax, semantics, pragmatics
 
 Computer Science: 
 
-*programming languages (java, scheme)*
+  *programming languages (java, scheme)*
 
-*database query languages (sql)*
+  *database query languages (sql)*
 
 
 Formal semantics
 
-*meaning = behaviour*
-as a mathematical object!
+  *meaning = behaviour*
+  as a mathematical object!
