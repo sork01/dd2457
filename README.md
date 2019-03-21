@@ -69,3 +69,9 @@ properties of states: state assertions
 Meaning of programs: Hoare triples
 
 Meaning of constructs: given by rules ("axiomatic")
+
+## Lecture 3
+
+Natural Semantics
+
+*<S,s> -> s'*
