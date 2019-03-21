@@ -75,3 +75,20 @@ Meaning of constructs: given by rules ("axiomatic")
 Natural Semantics
 
 *<S,s> -> s'*
+Executing statment S and initial statement s result in statement s'
+
+Subscript ns means natural semantics.
+
+Termination
+
+*S terminates from s <=> backE s'eSkle:<S,s>->s'*
+
+Equivalence between statements
+
+*S_1 ~ S_2 <=> V s_1,s_2 e State. <S_1,s_1> -> s_2 <=> <S_2,s_1> -> s_2*
+
+if b then S_1 else ~ if not b then S_2 else S_1
+
+(=>) Let s_1 s' e State
+Let <if b then S_1 else S_2,s> -> s'
+Show <if not b then S_2 else S_1,s> -> s'
