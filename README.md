@@ -79,16 +79,43 @@ Executing statment S and initial statement s result in statement s'
 
 Subscript ns means natural semantics.
 
-Termination
+### Termination
 
 *S terminates from s <=> backE s'eSkle:<S,s>->s'*
 
-Equivalence between statements
+### Equivalence between statements
 
 *S_1 ~ S_2 <=> V s_1,s_2 e State. <S_1,s_1> -> s_2 <=> <S_2,s_1> -> s_2*
 
 if b then S_1 else ~ if not b then S_2 else S_1
+S_1 ~ S'_1
+    ~ S^2_1
+    ~
+    ~ S_2
+
 
 (=>) Let s_1 s' e State
 Let <if b then S_1 else S_2,s> -> s'
 Show <if not b then S_2 else S_1,s> -> s'
+
+Lemma 2.5
+while b do S ~ if b then (s; while b do S) else skip
+proof in book: page 29++
+
+### Theorem 2.9 The natural semantics of While is deterministic
+
+V SeStm. Vs,s',s''eState.
+<S,s> -> s' ^ <S,s> -> s'' => s' = s''
+
+S_ns: Stm -> (State -\ State)
+
+S_ns[[S]](s) = s' if <S,s> -> s' 
+              undef otherwise
+              
+S_ns = S_sos = S_am = S_ds
+
+### Small step operational semantics / structural 
+S = statement s = state
+initial/intermediate: <S,s>
+final : s'
+Execution <S_0,s_0> => <S_1,s_1> => ... => s_n
