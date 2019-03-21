@@ -119,3 +119,16 @@ S = statement s = state
 initial/intermediate: <S,s>
 final : s'
 Execution <S_0,s_0> => <S_1,s_1> => ... => s_n
+
+Granularity: Next control point
+
+<skip,s> => s
+<x:=a,s> => s[x|-> A[[a]](s)]
+<S_1,S_2,s> => <S_2,s'>
+<S_1,s> => <S_1',s'>
+<S_1,S_2,s> => > <S_1',S_2,s'>
+
+
+
+
+
