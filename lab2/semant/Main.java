@@ -10,8 +10,11 @@ public class Main {
         Boolean step = false;
         int n = args.length;
         Stm s = WhileParser.parse(args[0]);
+        int c = 0;
         if (n == 2 && args[1].equals("s"))
         {
+            c++;
+            s.c = c;
             step = true;
         }        
 
@@ -29,6 +32,7 @@ public class Main {
         for (int i = 0; i < code.size(); i++)
         {
             amcode.addLast(code.get(i));
+
         }
         VM vm = new VM();
         // System.out.println("this is amcode " + amcode);

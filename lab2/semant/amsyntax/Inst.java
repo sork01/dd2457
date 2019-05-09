@@ -19,6 +19,8 @@ public abstract class Inst {
     public String toString() {
         return opcode.toString();
     }
+
+    int stmControlPoint;
     
     
     // Two instructions are equal iff their string representations are equal.
