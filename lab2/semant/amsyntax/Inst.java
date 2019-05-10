@@ -6,7 +6,8 @@ public abstract class Inst {
     public enum Opcode { ADD, AND, BRANCH, CHECK, DIV, EQ, FALSE, FETCH, LE,
         LOOP, MULT, NEG, NOOP, PUSH, STORE, SUB, TRUE, TRYCATCH, UNCHECK
     };
-    
+
+    public int stmControlPoint;
     
     public final Opcode opcode;
     
@@ -19,8 +20,6 @@ public abstract class Inst {
     public String toString() {
         return opcode.toString();
     }
-
-    int stmControlPoint;
     
     
     // Two instructions are equal iff their string representations are equal.

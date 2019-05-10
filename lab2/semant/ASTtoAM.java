@@ -40,6 +40,7 @@ public class ASTtoAM implements WhileVisitor {
     {
         Code code = new Code();
         code.addAll(assignment.a.accept(this));
+        code.get(0).stmControlPoint = assignment.controlPoint;
         code.add(new Store(assignment.x.id));
         return code;
     }
@@ -48,6 +49,7 @@ public class ASTtoAM implements WhileVisitor {
     {
         Code code = new Code();
         code.addAll(conditional.b.accept(this));
+        code.get(0).stmControlPoint = conditional.controlPoint;
         code.add(new Branch(conditional.s1.accept(this), conditional.s2.accept(this)));
         return code;
     }
@@ -105,6 +107,7 @@ public class ASTtoAM implements WhileVisitor {
     {
         Code code = new Code();
         code.add(new Noop());
+        code.get(0).stmControlPoint = skip.controlPoint;
         return code;
     }
     
@@ -135,14 +138,15 @@ public class ASTtoAM implements WhileVisitor {
     {
         Code code = new Code();
         code.add(new Loop(whyle.b.accept(this), whyle.s.accept(this)));
+        code.get(0).stmControlPoint = whyle.controlPoint;
         return code;
     }
     
     public Code visit(TryCatch trycatch)
     {
-        // System.err.println("testtrycatch");
         Code code = new Code();
         code.add(new AMTryCatch(trycatch.s1.accept(this), trycatch.s2.accept(this)));
+        code.get(0).stmControlPoint = trycatch.controlPoint;
         return code;
     }
     

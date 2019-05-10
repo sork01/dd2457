@@ -1,10 +1,9 @@
 package semant;
 
 import semant.amsyntax.*;
-import java.util.ArrayList;
+import semant.signexc.*;
 import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.Collection;
 
 class VM
 {
@@ -34,6 +33,7 @@ class VM
     
     public String Execute(LinkedList<Inst> code, Boolean step)
     {
+        int lastpnt = 1;
         while (code.size() > 0)
             {
                 // System.out.println("");
@@ -44,25 +44,28 @@ class VM
                     // System.out.print(code.get(i) + " ");
                 // }
                 // System.out.println("");
-                
-                
-                
-                System.out.print("\n        stack: ");
+                // System.out.print("stack: ");
                 for (int i = 0; i < stack.size(); i++)
                 {
-                
                     System.out.print(stack.get(i) + " ");
                 }
-                System.out.println("");
-                System.out.println("        store: " + store);
-                
-                
-                
+                System.out.println(store);
                 // System.out.println("");
                 
                 
                 
                 Inst inst = code.pop();
+                int ctrlpnt = inst.stmControlPoint;
+
+                if (ctrlpnt == 0)
+                {
+                    System.out.print("(" + lastpnt + ") ");
+                }
+                else
+                {
+                    System.out.print("(" + inst.stmControlPoint + ") ");
+                    lastpnt = inst.stmControlPoint;
+                }
                 System.out.print(inst + " ");
                 if (step == true)
                 {
@@ -76,68 +79,58 @@ class VM
                 
                 if (inst instanceof Push)
                 {
-                    Push push = (Push) inst;
-                    stack.push(new StackValue(Integer.parseInt(push.n)));
-                    // System.out.println("pushed " + push.n);
-                
+                    if (invalidstate == false)
+                    {
+                        Push push = (Push) inst;
+                        stack.push(new StackValue(Integer.parseInt(push.n)));
+                        // System.out.println("pushed " + push.n);
+                    }
                 }
                 else if (inst instanceof Add)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    {
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
                         stack.push(new StackValue(z1.intval + z2.intval));
                     }
+                    
+                    // System.out.println("add");
+                    
+                    
                 }
-                
                 else if (inst instanceof Sub)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    {
-                        
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
+                    // System.out.println("sub");
+                    
                     stack.push(new StackValue(z1.intval - z2.intval));
                     }
                 }
                 else if (inst instanceof Mult)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    {    
-                        // System.out.println("mult");
-                        stack.push(new StackValue(z1.intval * z2.intval));
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
+                    // System.out.println("mult");
+                    
+                    stack.push(new StackValue(z1.intval * z2.intval));
                     }
                 }
                 else if (inst instanceof Div)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    {    
-                        // System.out.println("div");
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
+                        // System.out.println("div");sss
                         if (z2.intval == 0)
                         {
-                            stack.push(new StackValue(new StackValue.Bottom()));
+                            invalidstate = true;
                         }
                         else
                         {
@@ -147,14 +140,10 @@ class VM
                 }
                 else if (inst instanceof Eq)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    { 
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
                         // System.out.println("eq");
 
                         stack.push(new StackValue(z1.intval.equals(z2.intval)));
@@ -162,28 +151,20 @@ class VM
                 }
                 else if (inst instanceof Le)
                 {
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    { 
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
                         // System.out.println("le");
                         stack.push(new StackValue(z1.intval <= z2.intval));
                     }
                 }
                 else if (inst instanceof And)
-                {                    
-                    StackValue z1 = stack.pop();
-                    StackValue z2 = stack.pop();
-                    if (z1.bottomval != null || z2.bottomval != null)
+                {
+                    if (invalidstate == false)
                     {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    { 
+                        StackValue z1 = stack.pop();
+                        StackValue z2 = stack.pop();
                         // System.out.println("and");
                         if  (z1.boolval == true && z2.boolval == true)
                         {
@@ -200,28 +181,20 @@ class VM
                         Branch branch = (Branch) inst;
                         
                         StackValue z1 = stack.pop();
-                        
-                        if (z1.bottomval != null)
+                        if  (z1.boolval == true)
                         {
-                            invalidstate = true;
+                            for (int i = branch.c1.size() -1; i >= 0; i--)
+                            {
+                                code.addFirst(branch.c1.get(i));
+                                // System.out.println("added " + branch.c1.get(i) + " to stack");
+                            }
                         }
                         else
-                        { 
-                            if  (z1.boolval == true)
+                        {
+                            for (int i = branch.c2.size() -1; i >= 0; i--)
                             {
-                                for (int i = branch.c1.size() -1; i >= 0; i--)
-                                {
-                                    code.addFirst(branch.c1.get(i));
-                                    // System.out.println("added " + branch.c1.get(i) + " to stack");
-                                }
-                            }
-                            else
-                            {
-                                for (int i = branch.c2.size() -1; i >= 0; i--)
-                                {
-                                    code.addFirst(branch.c2.get(i));
-                                    // System.out.println("added " + branch.c2.get(i) + " to stack");
-                                }
+                                code.addFirst(branch.c2.get(i));
+                                // System.out.println("added " + branch.c2.get(i) + " to stack");
                             }
                         }
                 }
@@ -307,7 +280,7 @@ class VM
                 }
                 else if (inst instanceof Check)
                 {
-                    System.out.println("invalidstate is " + invalidstate);
+                    // System.out.println("invalidstate is " + invalidstate);
                     if (invalidstate == true)
                     {
                         stack.push(new StackValue(true));
@@ -321,7 +294,7 @@ class VM
                 
                 else if (inst instanceof Uncheck)
                 {
-                    System.out.println("invalidstate is " + invalidstate);
+                    // System.out.println("invalidstate is " + invalidstate);
                     if (invalidstate == true)
                     {
                         invalidstate = false;
@@ -329,31 +302,22 @@ class VM
                 }
                 else if (inst instanceof Store)
                 {
-                    Store storeinst = (Store) inst;
-                    StackValue val = stack.pop();
-                    if (val.bottomval != null)
+                    if (invalidstate == false)
                     {
-                        invalidstate = true;
-                        // stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
-                    { 
-                        System.out.println("stored " + val.intval);
+                        Store storeinst = (Store) inst;
+                        StackValue val = stack.pop();
+                        // System.out.println("stored " + val.intval);
                         store.put(storeinst.x, val.intval);
                     }
                 }
                 else if (inst instanceof Fetch)
                 {
-                    if (invalidstate == true)
-                    {
-                        stack.push(new StackValue(new StackValue.Bottom()));
-                    }
-                    else
+                    if (invalidstate == false)
                     {
                         Fetch fetch = (Fetch) inst;
                         stack.push(new StackValue(store.get(fetch.x)));
                         // System.out.println("fetched " + fetch.x + " with value " + store.get(fetch.x));
-                    }   
+                    }
                 }
                 else
                 {
@@ -367,47 +331,23 @@ class VM
     private LinkedList<StackValue> stack;
     private HashMap<String, Integer> store;
     
-    public static class StackValue
+    private class StackValue
     {
-    
-        public Bottom bottomval = null;
-        
         public StackValue(int intval)
         {
             this.intval = intval;
             this.boolval = null;
-            this.bottomval = null;
         }
         
         public StackValue(boolean boolval)
         {
             this.intval = null;
             this.boolval = boolval;
-            this.bottomval = null;
-        }
-        
-        public StackValue(Bottom b) 
-        {
-            this.intval = null;
-            this.boolval = null;
-            this.bottomval = b;
-        } 
-        
-        public static class Bottom 
-        {
-            public String toString() { return "⊥"; }
         }
         
         public String toString() 
         { 
-            if (bottomval != null)
-            {
-                return "⊥";
-            }
-            else
-            {
-                return (boolval == null) ? intval.toString() : boolval.toString(); 
-            }
+            return (boolval == null) ? intval.toString() : boolval.toString(); 
         }
         
         public final Integer intval;
