@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="90f7fc0e-cca3-4063-b5de-4a58f966bb88" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/samples/while.while" beforeDir="false" afterPath="$PROJECT_DIR$/samples/while.while" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/ASTtoAM.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/ASTtoAM.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/ASTtoAM.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/ASTtoAM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/PrettyPrinter.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/PrettyPrinter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/PrettyPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/PrettyPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/VM$StackValue.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/VM$StackValue.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/VM.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/VM.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/VM.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/VM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/amsyntax/Inst.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/amsyntax/Inst.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/amsyntax/Inst.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/amsyntax/Inst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/out/production/semant/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/semant/out/production/semant/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/whilesyntax/Stm.class" beforeDir="false" afterPath="$PROJECT_DIR$/semant/whilesyntax/Stm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semant/whilesyntax/Stm.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/whilesyntax/Stm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semant/AIVM.java" beforeDir="false" afterPath="$PROJECT_DIR$/semant/AIVM.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,26 +18,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/semant/VM.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/semant/AIVM.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4815">
-              <caret line="327" column="30" selection-end-line="355" selection-end-column="1" />
+            <state relative-caret-position="388">
+              <caret line="186" column="41" lean-forward="true" selection-start-line="186" selection-start-column="41" selection-end-line="186" selection-end-column="41" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#854#869#0" expanded="true" />
+                <element signature="e#10704#10705#0" expanded="true" />
+                <element signature="e#10779#10780#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/semant/AIVM.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/semant/amsyntax/Fetch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="195">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
             </state>
           </provider>
         </entry>
@@ -65,10 +52,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/semant/amsyntax/Code.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/semant/signexc/SignExc.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="30">
+              <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -76,17 +72,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/semant/signexc/SignExcOps.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="118" selection-start-line="118" selection-end-line="118" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/semant/signexc/TTExcLattice.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+            <state relative-caret-position="174">
+              <caret line="143" column="6" selection-start-line="143" selection-start-column="6" selection-end-line="145" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -145,6 +132,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>step</find>
+      <find>store</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -182,6 +170,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -216,10 +206,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Course" />
-      <pane id="PackagesPane" />
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -247,10 +238,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="67" y="25" width="1613" height="1025" extended-state="6" />
+    <frame x="-3" y="0" width="1372" height="740" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22590938" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22885196" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -304,13 +295,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Code.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/semant/whilesyntax/Stm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -332,13 +316,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Inst.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -369,6 +346,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Inst$Opcode.class">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Inst.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="5" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Code.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/semant/amsyntax/Store.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -376,26 +370,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/semant/signexc/SignExcOps.java">
+    <entry file="file://$PROJECT_DIR$/semant/signexc/SignExc.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="118" selection-start-line="118" selection-end-line="118" />
+        <state relative-caret-position="30">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/semant/signexc/SignExc.java">
+    <entry file="file://$PROJECT_DIR$/semant/signexc/SignExcOps.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="174">
+          <caret line="143" column="6" selection-start-line="143" selection-start-column="6" selection-end-line="145" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/semant/amsyntax/Fetch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/semant/AIVM.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="388">
+          <caret line="186" column="41" lean-forward="true" selection-start-line="186" selection-start-column="41" selection-end-line="186" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#854#869#0" expanded="true" />
+            <element signature="e#10704#10705#0" expanded="true" />
+            <element signature="e#10779#10780#0" expanded="true" />
           </folding>
         </state>
       </provider>
