@@ -3,10 +3,7 @@ package semant;
 import semant.amsyntax.*;
 import semant.signexc.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 class AIVM
 {
@@ -26,6 +23,7 @@ class AIVM
         store = new HashMap<String, SignExc>();
         ops = new SignExcOps();
 
+
     }
 
     private void prependCode(LinkedList<Inst> target, Code snippet)
@@ -36,12 +34,113 @@ class AIVM
         }
     }
 
+    public void buildgraph(Configuration start)
+    {
+        HashMap<Integer, GraphNode> graph = new HashMap<Integer, GraphNode>();
+
+        Deque<Configuration> queue = new LinkedList<>();
+        queue.addLast(start);
+
+        while (!queue.isEmpty())
+        {
+            Configuration v = queue.pollFirst();
+            GraphNode x = new GraphNode();
+            x.addConfig(v);
+            graph.put(v.code.peek().stmControlPoint, x);
+            Set<Configuration>neighbors = step_to_next_controlpoint(v);
+
+            for (Configuration u : neighbors)
+            {
+                //System.out.println("not graphcontainsvalue u.stmcontrol? " + !graph.containsKey(u.code.peek().stmControlPoint));
+                //System.out.println("not graph.u.stmcontrol = u? " + !graph.get(u.code.peek().stmControlPoint).equals(u));
+                //System.out.println("graph is " + graph.toString());
+                //System.out.println(u.code.peek().stmControlPoint + " is not in graph");
+                if (!graph.containsKey(u.code.peek().stmControlPoint) || !x.hasConfig(u))
+                {
+                    //System.out.println("added: " + u + " to teh queue");
+                    queue.addLast(u);
+                }
+            }
+        }
+        System.out.println("queue is: " + queue);
+        System.out.println("graph is: " + graph);
+    }
+
+    public Set<Configuration> step_to_next_controlpoint(Configuration start)
+    {
+        Set<Configuration> jobs = new HashSet<Configuration>();
+        Set<Configuration> next = new HashSet<Configuration>();
+
+        //System.out.println("jobs before adding the start config: " + jobs);
+        jobs.add(start);
+        //System.out.println("jobs after adding the start config: " + jobs);
+        boolean done = false;
+        int count = 0;
+        while (!done)
+        {
+            int donecount = 0;
+            for(Configuration things : jobs) {
+                if (things.done) {
+                    donecount++;
+                }
+            }
+            if (donecount == jobs.size())
+            {
+                done = true;
+                return jobs;
+            }
+            else {
+                //System.out.println("jobs is: " + jobs);
+                int ctrlpnt = 0;
+                //System.out.println("length of jobs is: " + jobs.size());
+                for (Configuration job : jobs) {
+                    ctrlpnt = job.code.peek().stmControlPoint;
+                    next = step(job);
+                    //System.out.println("next after next = step(job): " + next);
+
+                    //System.out.println(jobs);
+                }
+
+                for (Configuration job2 : next) {
+                    //System.out.println("inside the for loop looking at job2: " + job2);
+                    if (job2.code.isEmpty() || (job2.code.peek().stmControlPoint != ctrlpnt && job2.code.peek().stmControlPoint > 0)) {
+                        System.out.println("startcontrolpoint = " + ctrlpnt + " and this controlpoins = " + job2.code.peek().stmControlPoint);
+                        job2.done = true;
+                        System.out.println("this job is done");
+                    }
+                    //System.out.println("added " + job2.toString() + " to jobs");
+                    jobs.clear();
+                    jobs.add(job2);
+                    //System.out.println("this is jobs after added to jobs: " + jobs);
+                }
+            }
+
+            count++;
+            //System.out.println("iteration " + count);
+        }
+        return jobs;
+    }
+
     public Set<Configuration> step(Configuration conf)
     {
         Set<Configuration> result = new HashSet<Configuration>();
         Configuration res = conf.clone();
 
+        int lastpnt = 1;
+
         Inst inst =  res.code.pop(); // get rid of leading instruction
+
+        int ctrlpnt = inst.stmControlPoint;
+
+        if (ctrlpnt == 0)
+        {
+            System.out.print("(" + lastpnt + ") ");
+        }
+        else
+        {
+            System.out.print("(" + inst.stmControlPoint + ") ");
+            lastpnt = inst.stmControlPoint;
+        }
 
         if (inst instanceof Push)
         {
@@ -49,19 +148,20 @@ class AIVM
             {
                 Push push = (Push) inst;
                 res.stack.push(new StackValue(ops.abs(Integer.parseInt(push.n))));
-                // System.out.println("pushed " + push.n);
+                result.add(res);
             }
         }
         else if (inst instanceof Add)
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
                 res.stack.push(new StackValue(ops.add(z1.se,z2.se)));
+                result.add(res);
             }
 
-            // System.out.println("add");
+            System.out.println("add");
 
 
         }
@@ -69,30 +169,32 @@ class AIVM
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
-                // System.out.println("sub");
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
+                System.out.println("sub");
 
                 res.stack.push(new StackValue(ops.subtract(z1.se, z2.se)));
+                result.add(res);
             }
         }
         else if (inst instanceof Mult)
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
                 // System.out.println("mult");
 
                 res.stack.push(new StackValue(ops.multiply(z1.se, z2.se)));
+                result.add(res);
             }
         }
         else if (inst instanceof Div)
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
                 //if (ops.possiblyInt(z2.se))
                 //{
                 //  invalidstate = true;
@@ -100,6 +202,7 @@ class AIVM
                 //else
                 //{
                 res.stack.push(new StackValue(ops.divide(z1.se, z2.se)));
+                result.add(res);
                 //}
             }
         }
@@ -107,52 +210,78 @@ class AIVM
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
-                // System.out.println("eq");
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
+                System.out.println("eq of " + z1.se + " and " +  z2.se + " is: " + ops.eq(z1.se, z2.se));
 
                 res.stack.push(new StackValue((ops.eq(z1.se, z2.se))));
+                result.add(res);
             }
         }
         else if (inst instanceof Le)
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
                 // System.out.println("le");
                 res.stack.push(new StackValue(ops.leq(z1.se, z2.se)));
+                result.add(res);
             }
         }
         else if (inst instanceof And)
         {
             if (res.invalidstate == false)
             {
-                StackValue z1 = stack.pop();
-                StackValue z2 = stack.pop();
+                StackValue z1 = res.stack.pop();
+                StackValue z2 = res.stack.pop();
                 res.stack.push(new StackValue(ops.and(z1.te, z2.te)));
+                result.add(res);
             }
         }
         else if (inst instanceof Branch)
         {
             Branch branch = (Branch) inst;
 
-            StackValue z1 = stack.pop();
-            if  (z1.boolval == true)
+            StackValue z1 = res.stack.pop();
+            if (z1.te == TTExc.TT)
             {
+                for (int i = branch.c1.size() -1; i >= 0; i--) {
+                    res.code.addFirst(branch.c1.get(i));
+                }
+                result.add(res);
+            }
+            if (z1.te == TTExc.FF)
+            {
+                for (int i = branch.c2.size() -1; i >= 0; i--) {
+                    res.code.addFirst(branch.c2.get(i));
+                }
+                result.add(res);
+            }
+
+            if  (ops.possiblyTrue(z1.te))
+            {
+                Configuration newres = res.clone();
+
                 for (int i = branch.c1.size() -1; i >= 0; i--)
                 {
-                    code.addFirst(branch.c1.get(i));
-                    // System.out.println("added " + branch.c1.get(i) + " to stack");
+                    newres.code.addFirst(branch.c1.get(i));
                 }
+                result.add(newres);
             }
-            else
+            if (ops.possiblyFalse(z1.te))
             {
                 for (int i = branch.c2.size() -1; i >= 0; i--)
                 {
-                    code.addFirst(branch.c2.get(i));
-                    // System.out.println("added " + branch.c2.get(i) + " to stack");
+                    res.code.addFirst(branch.c2.get(i));
                 }
+                result.add(res);
+            }
+            if (ops.possiblyBErr(z1.te))
+            {
+                res.invalidstate = true;
+                result.add(res);
+
             }
         }
 
@@ -173,7 +302,7 @@ class AIVM
 
                 snippet.add(new Branch(brtrue, brfalse));
 
-                prependCode(code, snippet);
+                prependCode(res.code, snippet);
             }
         }
         else if (inst instanceof AMTryCatch)
@@ -193,7 +322,7 @@ class AIVM
 
                 snippet.add(new Branch(brtrue, brfalse));
 
-                prependCode(code, snippet);
+                prependCode(res.code, snippet);
             }
         }
 
@@ -206,11 +335,13 @@ class AIVM
             if (res.invalidstate == false)
             {
                 res.stack.push(new StackValue(ops.abs(true)));
+                result.add(res);
                 // System.out.println("pushed tt");
             }
             else
             {
                 res.stack.push(new StackValue(SignExc.ERR_A));
+                result.add(res);
             }
         }
         else if (inst instanceof False)
@@ -218,17 +349,20 @@ class AIVM
             if (res.invalidstate == false)
             {
                 res.stack.push(new StackValue(ops.abs(false)));
+                result.add(res);
                 // System.out.println("pushed tt");
             }
             else
             {
                 res.stack.push(new StackValue(SignExc.ERR_A));
+                result.add(res);
             }
         }
         else if (inst instanceof Neg)
         {
-            StackValue val = stack.pop();
+            StackValue val = res.stack.pop();
             res.stack.push(new StackValue(ops.neg(val.te)));
+            result.add(res);
         }
         /*
         else if (inst instanceof Check)
@@ -259,23 +393,33 @@ class AIVM
             if (res.invalidstate == false)
             {
                 Store storeinst = (Store) inst;
-                StackValue val = stack.pop();
+                StackValue val = res.stack.pop();
                 // System.out.println("stored " + val.intval);
                 if (val.se == SignExc.ERR_A)
                 {
                     res.invalidstate = true;
+                    result.add(res);
                 }
                 else if (val.se == SignExc.ANY_A)
                 {
+                    Configuration newres = res.clone();
                     res.invalidstate = true;
                     result.add(res);
-                    res.invalidstate = false;
-                    res.store.put(storeinst.x, SignExc.Z);
+                    newres.invalidstate = false;
+                    newres.store.put(storeinst.x, SignExc.Z);
+                    result.add(newres);
                 }
                 else
                 {
                     res.store.put(storeinst.x, val.se);
+                    result.add(res);
+                    System.out.println("stored: " + val.se);
                 }
+            }
+            else
+            {
+                res.invalidstate = true;
+                result.add(res);
             }
         }
         else if (inst instanceof Fetch)
@@ -286,11 +430,17 @@ class AIVM
                 if (res.store.get(fetch.x) == SignExc.ERR_A)
                 {
                     res.invalidstate = true;
+                    result.add(res);
                 }
-                else
-                {
-                    res.stack.push(new StackValue(res.store.get(fetch.x)));
-                    // System.out.println("fetched " + fetch.x + " with value " + store.get(fetch.x));
+                else {
+                    if (res.store.get(fetch.x) == null) {
+                        res.stack.push(new StackValue(SignExc.Z));
+                        result.add(res);
+                    } else {
+                        res.stack.push(new StackValue(res.store.get(fetch.x)));
+                        result.add(res);
+                        System.out.println("fetched " + fetch.x + " with value " + res.store.get(fetch.x));
+                    }
                 }
             }
         }
@@ -298,11 +448,17 @@ class AIVM
         {
             System.out.println("Unknown instruction!!!!!!!!!! " + inst.getClass().getName());
         }
+        System.out.println("result is: " + result);
         return result;
     }
 
     public String Execute(LinkedList<Inst> code, Boolean step)
     {
+
+        Configuration start = new Configuration(code, stack, store, invalidstate, false);
+        buildgraph(start);
+
+        /*
         int lastpnt = 1;
         while (code.size() > 0)
         {
@@ -349,7 +505,7 @@ class AIVM
 
 
         }
-        System.out.println(store);
+        System.out.println(store);*/
         return "Execution Done";
     }
 
@@ -359,21 +515,29 @@ class AIVM
     class Configuration implements Cloneable
     {
         public LinkedList<Inst> code;
-        public LinkedList stack;
+        public LinkedList<StackValue> stack;
         public HashMap<String, SignExc> store;
+        public Boolean done;
         public Boolean invalidstate;
 
-        public Configuration(LinkedList<Inst> code, LinkedList stack, HashMap store, Boolean invalidstate)
+        public Configuration(LinkedList<Inst> code, LinkedList<StackValue> stack, HashMap store, Boolean invalidstate, Boolean done)
         {
             this.code = code;
             this.stack = stack;
             this.store = store;
             this.invalidstate = invalidstate;
+            this.done = done;
         }
 
         public Configuration clone()
         {
-            return new Configuration((LinkedList<Inst>) code.clone(), (LinkedList)stack.clone(), (HashMap)store.clone(), invalidstate);
+            return new Configuration((LinkedList<Inst>) code.clone(), (LinkedList)stack.clone(), (HashMap)store.clone(), invalidstate, done);
+        }
+
+        public String toString()
+        {
+            String out = "code: " + code + " stack: " + stack + " store: " + store + " state: " + invalidstate + " done: " + done;
+            return out;
         }
     }
 
@@ -398,5 +562,32 @@ class AIVM
 
         public final SignExc se;
         public final TTExc te;
+    }
+
+    class GraphNode
+    {
+        public GraphNode()
+        {
+            this.configs = new HashSet<Configuration>();
+            this.storeLUB = new HashMap<String, SignExc>();
+        }
+
+        public void addConfig(Configuration config)
+        {
+            this.configs.add(config);
+        }
+
+        public boolean hasConfig(Configuration config)
+        {
+            return this.configs.contains(config);
+        }
+
+        public void computeLUBs()
+        {
+            // TODO ..
+        }
+
+        private Set<Configuration> configs;
+        private HashMap<String, SignExc> storeLUB;
     }
 }

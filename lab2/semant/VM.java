@@ -59,7 +59,7 @@ class VM
 
                 if (ctrlpnt == 0)
                 {
-                    System.out.print("(" + lastpnt + ") ");
+                    //System.out.print("(" + lastpnt + ") ");
                 }
                 else
                 {

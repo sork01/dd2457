@@ -33,8 +33,9 @@ public class Main {
         VM vm = new VM();
         AIVM aivm = new AIVM();
         // System.out.println("this is amcode " + amcode);
-        System.out.println(vm.Execute(amcode, step));
-        System.out.println(aivm.Execute(amcode, step));
+        //System.out.println(vm.Execute(amcode, step));
+        //aivm.step_to_next_controlpoint(amcode);
+        aivm.Execute(amcode, step);
 
 
     }
