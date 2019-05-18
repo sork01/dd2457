@@ -27,43 +27,59 @@ class AIVM
         }
     }
 
-    public void buildgraph(Configuration start)
+    public void buildgraph(Configuration start, int endingControlPoint)
     {
         HashMap<Integer, GraphNode> graph = new HashMap<Integer, GraphNode>();
-
         Deque<Configuration> queue = new LinkedList<>();
+        
+        GraphNode startNode = new GraphNode();
+        startNode.addConfig(start);
+        
+        graph.put(start.code.peek().stmControlPoint, startNode);
+        
+        System.out.println("Queing " + start.toString());
         queue.addLast(start);
-
+        
         while (!queue.isEmpty())
         {
             Configuration v = queue.pollFirst();
-            GraphNode x = new GraphNode();
-            x.addConfig(v);
-            System.out.println(">>>> Queueing Configuration(" + x.configs + ")");
-            System.out.println(">>>> Exploring from Configuration(" + x.configs+ ")");
-            graph.put(v.code.peek().stmControlPoint, x);
-            Set<Configuration>neighbors = step_to_next_controlpoint(v);
-
+            System.out.println("Exploring from " + v.toString());
+            
+            Set<Configuration> neighbors = step_to_next_controlpoint(v);
+            
             for (Configuration u : neighbors)
             {
-                int controlpoint = u.code.peek().stmControlPoint;
-                System.out.println(">>>> Neighbour (CP=" + controlpoint + ") : Configuration(" + u + ")");
-                //System.out.println("not graphcontainsvalue u.stmcontrol? " + !graph.containsKey(u.code.peek().stmControlPoint));
-                //System.out.println("not graph.u.stmcontrol = u? " + !graph.get(u.code.peek().stmControlPoint).equals(u));
-                //System.out.println("graph is " + graph.toString());
-                //System.out.println(u.code.peek().stmControlPoint + " is not in graph");
-                if (!graph.containsKey(controlpoint))
+                int controlPoint;
+                
+                if (u.code.isEmpty())
                 {
-                    graph.put(controlpoint, new GraphNode());
-                    System.out.println(">>>> Added (CP=" + controlpoint + ") : Configuration" + u + " to the graph");
+                    controlPoint = endingControlPoint;
                 }
-                if (!graph.get(controlpoint).hasConfig(u))
+                else
                 {
-                    graph.get(controlpoint).addConfig(u);
-                    queue.addLast(u);
+                    controlPoint = u.code.peek().stmControlPoint;
+                }
+                
+                System.out.println(">>>> Neighbor (CP=" + controlPoint + "): " + u.toString());
+                
+                if (!graph.containsKey(controlPoint))
+                {
+                    graph.put(controlPoint, new GraphNode());
+                }
+                
+                if (!graph.get(controlPoint).hasConfig(u))
+                {
+                    graph.get(controlPoint).addConfig(u);
+                    
+                    if (!u.code.isEmpty())
+                    {
+                        System.out.println(">>>> Queing " + u.toString());
+                        queue.addLast(u);
+                    }
                 }
             }
         }
+        
         System.out.println("queue is: " + queue);
         System.out.println("graph is: " + graph);
     }
