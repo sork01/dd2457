@@ -623,6 +623,27 @@ class AIVM
         {
             // TODO ..
         }
+        
+        public String toString()
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            sb.append("GraphNode(");
+            
+            sb.append("configs(");
+            sb.append(this.configs.toString());
+            sb.append(")");
+            
+            sb.append(",");
+            
+            sb.append("storeLUB(");
+            sb.append(this.storeLUB.toString());
+            sb.append(")");
+            
+            sb.append(")");
+            
+            return sb.toString();
+        }
 
         private Set<Configuration> configs;
         private HashMap<String, SignExc> storeLUB;
