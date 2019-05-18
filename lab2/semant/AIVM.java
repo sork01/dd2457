@@ -70,57 +70,62 @@ class AIVM
 
     public Set<Configuration> step_to_next_controlpoint(Configuration start)
     {
-        Set<Configuration> jobs = new HashSet<Configuration>();
-        Set<Configuration> next = new HashSet<Configuration>();
-
-        //System.out.println("jobs before adding the start config: " + jobs);
-        jobs.add(start);
-        //System.out.println("jobs after adding the start config: " + jobs);
-        boolean done = false;
-        int count = 0;
-        while (!done)
+        Set<SCPJob> jobs = new HashSet<SCPJob>();
+        Set<SCPJob> newJobs = new HashSet<SCPJob>();
+        
+        jobs.add(new SCPJob(start));
+        
+        while (true)
         {
-            int donecount = 0;
-            for(Configuration things : jobs) {
-                if (things.done) {
-                    donecount++;
-                }
-            }
-            if (donecount == jobs.size())
+            boolean workTodo = false;
+            
+            for (SCPJob job : jobs)
             {
-                done = true;
-                return jobs;
-            }
-            else {
-                //System.out.println("jobs is: " + jobs);
-                int ctrlpnt = 0;
-                //System.out.println("length of jobs is: " + jobs.size());
-                for (Configuration job : jobs) {
-                    ctrlpnt = job.code.peek().stmControlPoint;
-                    next = step(job);
-                    //System.out.println("next after next = step(job): " + next);
-
-                    //System.out.println(jobs);
+                if (!job.done)
+                {
+                    workTodo = true;
+                    break;
                 }
-
-                for (Configuration job2 : next) {
-                    //System.out.println("inside the for loop looking at job2: " + job2);
-                    if (job2.code.isEmpty() || (job2.code.peek().stmControlPoint != ctrlpnt && job2.code.peek().stmControlPoint > 0)) {
-                        //System.out.println("startcontrolpoint = " + ctrlpnt + " and this controlpoins = " + job2.code.peek().stmControlPoint);
+            }
+            
+            if (!workTodo)
+            {
+                HashSet<Configuration> results = new HashSet<Configuration>();
+                
+                for (SCPJob job : jobs)
+                {
+                    results.add(job.config);
+                }
+                
+                return results;
+            }
+            
+            for (SCPJob job : jobs)
+            {
+                if (job.done)
+                {
+                    continue;
+                }
+                
+                int ctrlpnt = job.config.code.peek().stmControlPoint;
+                
+                for (Configuration stepconf : step(job.config))
+                {
+                    SCPJob job2 = new SCPJob(stepconf);
+                    
+                    if (stepconf.code.isEmpty() || (stepconf.code.peek().stmControlPoint != ctrlpnt
+                                                 && stepconf.code.peek().stmControlPoint > 0))
+                    {
                         job2.done = true;
-                        //System.out.println("this job is done");
                     }
-                    //System.out.println("added " + job2.toString() + " to jobs");
-                    jobs.clear();
-                    jobs.add(job2);
-                    //System.out.println("this is jobs after added to jobs: " + jobs);
+                    
+                    newJobs.add(job2);
                 }
             }
-
-            count++;
-            //System.out.println("iteration " + count);
+            
+            jobs = newJobs;
+            newJobs = new HashSet<SCPJob>();
         }
-        return jobs;
     }
 
     public Set<Configuration> step(Configuration inputConf)
