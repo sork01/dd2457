@@ -568,12 +568,26 @@ class AIVM
     {
         public StackValue(SignExc sign)
         {
+            if (sign == null)
+            {
+                System.err.println("NULL SIGN IS NOT ACCEPTABLE");
+                new Exception().printStackTrace();
+                System.exit(1);
+            }
+            
             this.se = sign;
             this.te = null;
         }
 
         public StackValue(TTExc ttex)
         {
+            if (ttex == null)
+            {
+                System.err.println("NULL TTEX IS NOT ACCEPTABLE");
+                new Exception().printStackTrace();
+                System.exit(1);
+            }
+            
             this.se = null;
             this.te = ttex;
         }
