@@ -454,62 +454,11 @@ class AIVM
         return result;
     }
 
-    public String Execute(LinkedList<Inst> code, Boolean step)
+    public void Execute(LinkedList<Inst> code)
     {
-
         Configuration start = new Configuration(code, new LinkedList<StackValue>(),
                                                 new HashMap<String, SignExc>(), false);
-        buildgraph(start);
-
-        /*
-        int lastpnt = 1;
-        while (code.size() > 0)
-        {
-            // System.out.println("");
-            // System.out.println("invalidstate is " + invalidstate);
-            // System.out.println("code: ");
-            // for (int i = 0; i < code.size(); i++)
-            // {
-            // System.out.print(code.get(i) + " ");
-            // }
-            // System.out.println("");
-            // System.out.print("stack: ");
-            for (int i = 0; i < stack.size(); i++)
-            {
-                System.out.print(stack.get(i) + " ");
-            }
-            System.out.println(store);
-            // System.out.println("");
-
-
-
-            Inst inst = code.pop();
-            int ctrlpnt = inst.stmControlPoint;
-
-            if (ctrlpnt == 0)
-            {
-                System.out.print("(" + lastpnt + ") ");
-            }
-            else
-            {
-                System.out.print("(" + inst.stmControlPoint + ") ");
-                lastpnt = inst.stmControlPoint;
-            }
-            System.out.print(inst + " ");
-            if (step == true)
-            {
-                try
-                {
-                    System.in.read();
-                }
-                catch(Exception e)
-                {}
-            }
-
-
-        }
-        System.out.println(store);*/
-        return "Execution Done";
+        buildgraph(start, getNumControlPoints(code) + 1);
     }
 
     class Configuration implements Cloneable
