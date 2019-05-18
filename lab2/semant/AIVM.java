@@ -454,6 +454,44 @@ class AIVM
         return result;
     }
 
+    public int getNumControlPoints(Collection<Inst> code)
+    {
+        return getNumControlPoints(code, 0);
+    }
+    
+    public int getNumControlPoints(Collection<Inst> code, int oldcp)
+    {
+        int count = 0;
+
+        for (Inst in : code)
+        {
+            if (in instanceof Branch)
+            {
+                count += getNumControlPoints(((Branch)in).c1, oldcp);
+                count += getNumControlPoints(((Branch)in).c2, oldcp);
+            }
+            else if (in instanceof Loop)
+            {
+                count += getNumControlPoints(((Loop)in).c1, oldcp);
+                count += getNumControlPoints(((Loop)in).c2, oldcp);
+            }
+            else if (in instanceof AMTryCatch)
+            {
+                count += getNumControlPoints(((AMTryCatch)in).c1, oldcp);
+                count += getNumControlPoints(((AMTryCatch)in).c2, oldcp);
+            }
+
+            if (in.stmControlPoint > oldcp)
+            {
+                // System.out.println("Found CP " + in.stmControlPoint + " at " + in);
+                ++count;
+                oldcp = in.stmControlPoint;
+            }
+        }
+
+        return count;
+    }
+
     public void Execute(LinkedList<Inst> code)
     {
         Configuration start = new Configuration(code, new LinkedList<StackValue>(),
