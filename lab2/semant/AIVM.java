@@ -517,27 +517,50 @@ class AIVM
         public LinkedList<Inst> code;
         public LinkedList<StackValue> stack;
         public HashMap<String, SignExc> store;
-        public Boolean done;
         public Boolean invalidstate;
 
-        public Configuration(LinkedList<Inst> code, LinkedList<StackValue> stack, HashMap store, Boolean invalidstate, Boolean done)
+        public Configuration(LinkedList<Inst> code, LinkedList<StackValue> stack,
+                              HashMap<String, SignExc> store, Boolean invalidstate)
         {
             this.code = code;
             this.stack = stack;
             this.store = store;
             this.invalidstate = invalidstate;
-            this.done = done;
         }
 
         public Configuration clone()
         {
-            return new Configuration((LinkedList<Inst>) code.clone(), (LinkedList)stack.clone(), (HashMap)store.clone(), invalidstate, done);
+            return new Configuration((LinkedList<Inst>)code.clone(),
+                                     (LinkedList<StackValue>)stack.clone(),
+                                     (HashMap<String, SignExc>)store.clone(),
+                                     invalidstate);
         }
 
         public String toString()
         {
-            String out = "code: " + code + " stack: " + stack + " store: " + store + " state: " + invalidstate + " done: " + done;
-            return out;
+            return "Configuration(code: " + code + " stack: " + stack + " store: " + store +
+                   " state: " + invalidstate + ")";
+        }
+        
+        public boolean equals(Object other)
+        {
+            if (other == this)
+            {
+                return true;
+            }
+            else if (!(other instanceof Configuration))
+            {
+                return false;
+            }
+            else
+            {
+                return this.hashCode() == other.hashCode();
+            }
+        }
+        
+        public int hashCode()
+        {
+            return this.toString().hashCode();
         }
     }
 
