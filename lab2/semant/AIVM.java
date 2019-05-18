@@ -46,18 +46,27 @@ class AIVM
             Configuration v = queue.pollFirst();
             GraphNode x = new GraphNode();
             x.addConfig(v);
+            System.out.println(">>>> Queueing Configuration(" + x.configs + ")");
+            System.out.println(">>>> Exploring from Configuration(" + x.configs+ ")");
             graph.put(v.code.peek().stmControlPoint, x);
             Set<Configuration>neighbors = step_to_next_controlpoint(v);
 
             for (Configuration u : neighbors)
             {
+                int controlpoint = u.code.peek().stmControlPoint;
+                System.out.println(">>>> Neighbour (CP=" + controlpoint + ") : Configuration(" + u + ")");
                 //System.out.println("not graphcontainsvalue u.stmcontrol? " + !graph.containsKey(u.code.peek().stmControlPoint));
                 //System.out.println("not graph.u.stmcontrol = u? " + !graph.get(u.code.peek().stmControlPoint).equals(u));
                 //System.out.println("graph is " + graph.toString());
                 //System.out.println(u.code.peek().stmControlPoint + " is not in graph");
-                if (!graph.containsKey(u.code.peek().stmControlPoint) || !x.hasConfig(u))
+                if (!graph.containsKey(controlpoint))
                 {
-                    //System.out.println("added: " + u + " to teh queue");
+                    graph.put(controlpoint, new GraphNode());
+                    System.out.println(">>>> Added (CP=" + controlpoint + ") : Configuration" + u + " to the graph");
+                }
+                if (!graph.get(controlpoint).hasConfig(u))
+                {
+                    graph.get(controlpoint).addConfig(u);
                     queue.addLast(u);
                 }
             }
@@ -104,9 +113,9 @@ class AIVM
                 for (Configuration job2 : next) {
                     //System.out.println("inside the for loop looking at job2: " + job2);
                     if (job2.code.isEmpty() || (job2.code.peek().stmControlPoint != ctrlpnt && job2.code.peek().stmControlPoint > 0)) {
-                        System.out.println("startcontrolpoint = " + ctrlpnt + " and this controlpoins = " + job2.code.peek().stmControlPoint);
+                        //System.out.println("startcontrolpoint = " + ctrlpnt + " and this controlpoins = " + job2.code.peek().stmControlPoint);
                         job2.done = true;
-                        System.out.println("this job is done");
+                        //System.out.println("this job is done");
                     }
                     //System.out.println("added " + job2.toString() + " to jobs");
                     jobs.clear();
@@ -134,12 +143,12 @@ class AIVM
 
         if (ctrlpnt == 0)
         {
-            System.out.print("(" + lastpnt + ") ");
+            //System.out.print("(" + lastpnt + ") ");
         }
         else
         {
-            System.out.print("(" + inst.stmControlPoint + ") ");
-            lastpnt = inst.stmControlPoint;
+            //System.out.print("(" + inst.stmControlPoint + ") ");
+            //lastpnt = inst.stmControlPoint;
         }
 
         if (inst instanceof Push)
@@ -212,7 +221,7 @@ class AIVM
             {
                 StackValue z1 = res.stack.pop();
                 StackValue z2 = res.stack.pop();
-                System.out.println("eq of " + z1.se + " and " +  z2.se + " is: " + ops.eq(z1.se, z2.se));
+                //System.out.println("eq of " + z1.se + " and " +  z2.se + " is: " + ops.eq(z1.se, z2.se));
 
                 res.stack.push(new StackValue((ops.eq(z1.se, z2.se))));
                 result.add(res);
@@ -448,7 +457,7 @@ class AIVM
         {
             System.out.println("Unknown instruction!!!!!!!!!! " + inst.getClass().getName());
         }
-        System.out.println("result is: " + result);
+        //System.out.println("result is: " + result);
         return result;
     }
 
