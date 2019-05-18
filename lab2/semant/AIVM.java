@@ -11,19 +11,12 @@ class AIVM
     {
         new AIVM();
     }
-
-    public Boolean invalidstate = false;
-
+    
     public SignExcOps ops;
 
     public AIVM()
     {
-        LinkedList<Inst> code = new LinkedList<Inst>();
-        stack = new LinkedList<StackValue>();
-        store = new HashMap<String, SignExc>();
         ops = new SignExcOps();
-
-
     }
 
     private void prependCode(LinkedList<Inst> target, Code snippet)
@@ -464,7 +457,8 @@ class AIVM
     public String Execute(LinkedList<Inst> code, Boolean step)
     {
 
-        Configuration start = new Configuration(code, stack, store, invalidstate, false);
+        Configuration start = new Configuration(code, new LinkedList<StackValue>(),
+                                                new HashMap<String, SignExc>(), false);
         buildgraph(start);
 
         /*
@@ -517,9 +511,6 @@ class AIVM
         System.out.println(store);*/
         return "Execution Done";
     }
-
-    private LinkedList<StackValue> stack;
-    private HashMap<String, SignExc> store;
 
     class Configuration implements Cloneable
     {
