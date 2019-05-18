@@ -67,6 +67,39 @@ class AIVM
         System.out.println("queue is: " + queue);
         System.out.println("graph is: " + graph);
     }
+    
+    private class SCPJob
+    {
+        public SCPJob(Configuration config)
+        {
+            this.config = config;
+            this.done = false;
+        }
+        
+        public boolean equals(Object other)
+        {
+            if (other == this)
+            {
+                return true;
+            }
+            else if (!(other instanceof SCPJob))
+            {
+                return false;
+            }
+            else
+            {
+                return this.hashCode() == other.hashCode();
+            }
+        }
+        
+        public int hashCode()
+        {
+            return this.config.hashCode();
+        }
+        
+        public Configuration config;
+        public boolean done;
+    }
 
     public Set<Configuration> step_to_next_controlpoint(Configuration start)
     {
