@@ -123,335 +123,379 @@ class AIVM
         return jobs;
     }
 
-    public Set<Configuration> step(Configuration conf)
+    public Set<Configuration> step(Configuration inputConf)
     {
-        Set<Configuration> result = new HashSet<Configuration>();
-        Configuration res = conf.clone();
-
-        int lastpnt = 1;
-
-        Inst inst =  res.code.pop(); // get rid of leading instruction
-
-        int ctrlpnt = inst.stmControlPoint;
-
-        if (ctrlpnt == 0)
-        {
-            //System.out.print("(" + lastpnt + ") ");
-        }
-        else
-        {
-            //System.out.print("(" + inst.stmControlPoint + ") ");
-            //lastpnt = inst.stmControlPoint;
-        }
-
+        final Configuration conf = inputConf.clone(); // make sure we never touch inputConf
+        
+        Set<Configuration> results = new HashSet<Configuration>();
+        Inst inst = conf.code.peek();
+        
         if (inst instanceof Push)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
                 Push push = (Push) inst;
-                res.stack.push(new StackValue(ops.abs(Integer.parseInt(push.n))));
-                result.add(res);
+                next.stack.push(new StackValue(ops.abs(Integer.parseInt(push.n))));
             }
+            else
+            {
+                next.stack.push(new StackValue(SignExc.ERR_A));
+            }
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Add)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                res.stack.push(new StackValue(ops.add(z1.se,z2.se)));
-                result.add(res);
-            }
-
-            System.out.println("add");
-
-
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.add(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Sub)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                System.out.println("sub");
-
-                res.stack.push(new StackValue(ops.subtract(z1.se, z2.se)));
-                result.add(res);
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.subtract(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Mult)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                // System.out.println("mult");
-
-                res.stack.push(new StackValue(ops.multiply(z1.se, z2.se)));
-                result.add(res);
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.multiply(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Div)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                //if (ops.possiblyInt(z2.se))
-                //{
-                //  invalidstate = true;
-                //}
-                //else
-                //{
-                res.stack.push(new StackValue(ops.divide(z1.se, z2.se)));
-                result.add(res);
-                //}
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.divide(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Eq)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                //System.out.println("eq of " + z1.se + " and " +  z2.se + " is: " + ops.eq(z1.se, z2.se));
-
-                res.stack.push(new StackValue((ops.eq(z1.se, z2.se))));
-                result.add(res);
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            
+            next.stack.push(new StackValue(ops.eq(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Le)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                // System.out.println("le");
-                res.stack.push(new StackValue(ops.leq(z1.se, z2.se)));
-                result.add(res);
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.leq(v1.se, v2.se)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof And)
         {
-            if (res.invalidstate == false)
-            {
-                StackValue z1 = res.stack.pop();
-                StackValue z2 = res.stack.pop();
-                res.stack.push(new StackValue(ops.and(z1.te, z2.te)));
-                result.add(res);
-            }
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue v1 = next.stack.pop();
+            StackValue v2 = next.stack.pop();
+            next.stack.push(new StackValue(ops.and(v1.te, v2.te)));
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Branch)
         {
             Branch branch = (Branch) inst;
-
-            StackValue z1 = res.stack.pop();
-            if (z1.te == TTExc.TT)
+            StackValue v1 = conf.stack.get(0);
+            
+            Configuration then = conf.clone();
+            then.code.pop();
+            then.stack.pop();
+            
+            for (Inst c : branch.c1)
             {
-                for (int i = branch.c1.size() -1; i >= 0; i--) {
-                    res.code.addFirst(branch.c1.get(i));
-                }
-                result.add(res);
+                then.code.addLast(c);
             }
-            if (z1.te == TTExc.FF)
+            
+            Configuration els = conf.clone();
+            els.code.pop();
+            els.stack.pop();
+            
+            for (Inst c : branch.c2)
             {
-                for (int i = branch.c2.size() -1; i >= 0; i--) {
-                    res.code.addFirst(branch.c2.get(i));
-                }
-                result.add(res);
+                els.code.addLast(c);
             }
-
-            if  (ops.possiblyTrue(z1.te))
+            
+            Configuration err = conf.clone();
+            err.code.pop();
+            err.stack.pop();
+            err.invalidstate = true;
+            
+            if (conf.invalidstate == false)
             {
-                Configuration newres = res.clone();
-
-                for (int i = branch.c1.size() -1; i >= 0; i--)
+                if (ops.possiblyTrue(v1.te))
                 {
-                    newres.code.addFirst(branch.c1.get(i));
+                    results.add(then);
                 }
-                result.add(newres);
-            }
-            if (ops.possiblyFalse(z1.te))
-            {
-                for (int i = branch.c2.size() -1; i >= 0; i--)
+                
+                if (ops.possiblyFalse(v1.te))
                 {
-                    res.code.addFirst(branch.c2.get(i));
+                    results.add(els);
                 }
-                result.add(res);
+                
+                if (ops.possiblyBErr(v1.te))
+                {
+                    results.add(err);
+                }
             }
-            if (ops.possiblyBErr(z1.te))
+            else
             {
-                res.invalidstate = true;
-                result.add(res);
-
+                results.add(err);
             }
+            
+            return results;
         }
-
         else if (inst instanceof Loop)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
                 Loop loop = (Loop) inst;
                 Code snippet = new Code();
+                
                 snippet.addAll(loop.c1);
-
+                
                 Code brtrue = new Code();
                 brtrue.addAll(loop.c2);
                 brtrue.add(inst);
-
+                
                 Code brfalse = new Code();
                 brfalse.add(new Noop());
-
+                
                 snippet.add(new Branch(brtrue, brfalse));
-
-                prependCode(res.code, snippet);
+                
+                prependCode(next.code, snippet);
             }
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof AMTryCatch)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
                 AMTryCatch trycatch = (AMTryCatch) inst;
                 Code snippet = new Code();
+                
                 snippet.addAll(trycatch.c1);
                 snippet.add(new Check());
+                
                 Code brtrue = new Code();
                 brtrue.add(new Uncheck());
                 brtrue.addAll(trycatch.c2);
-
+                
                 Code brfalse = new Code();
                 brfalse.add(new Noop());
-
+                
                 snippet.add(new Branch(brtrue, brfalse));
-
-                prependCode(res.code, snippet);
+                
+                prependCode(next.code, snippet);
             }
+            
+            results.add(next);
+            return results;
         }
-
         else if (inst instanceof Noop)
         {
-            // System.out.println("noop");
+            Configuration next = conf.clone();
+            next.code.pop();
+            results.add(next);
+            return results;
         }
         else if (inst instanceof True)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
-                res.stack.push(new StackValue(ops.abs(true)));
-                result.add(res);
-                // System.out.println("pushed tt");
+                next.stack.push(new StackValue(ops.abs(true)));
             }
             else
             {
-                res.stack.push(new StackValue(SignExc.ERR_A));
-                result.add(res);
+                next.stack.push(new StackValue(SignExc.ERR_A));
             }
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof False)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
-                res.stack.push(new StackValue(ops.abs(false)));
-                result.add(res);
-                // System.out.println("pushed tt");
+                next.stack.push(new StackValue(ops.abs(false)));
             }
             else
             {
-                res.stack.push(new StackValue(SignExc.ERR_A));
-                result.add(res);
+                next.stack.push(new StackValue(SignExc.ERR_A));
             }
+            
+            results.add(next);
+            return results;
         }
         else if (inst instanceof Neg)
         {
-            StackValue val = res.stack.pop();
-            res.stack.push(new StackValue(ops.neg(val.te)));
-            result.add(res);
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            StackValue val = next.stack.pop();
+            
+            next.stack.push(new StackValue(ops.neg(val.te)));
+            results.add(next);
+            return results;
         }
-        /*
         else if (inst instanceof Check)
         {
-            // System.out.println("invalidstate is " + invalidstate);
-            if (invalidstate == true)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == true)
             {
-                stack.push(new StackValue(true));
+                next.stack.push(new StackValue(ops.abs(true)));
             }
             else
             {
-                stack.push(new StackValue(false));
+                next.stack.push(new StackValue(ops.abs(false)));
             }
-
+            
+            results.add(next);
+            return results;
         }
-
         else if (inst instanceof Uncheck)
         {
-            // System.out.println("invalidstate is " + invalidstate);
-            if (invalidstate == true)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == true)
             {
-                invalidstate = false;
+                next.invalidstate = false;
             }
+            
+            results.add(next);
+            return results;
         }
-        */
         else if (inst instanceof Store)
         {
-            if (res.invalidstate == false)
+            Store store = (Store) inst;
+            StackValue val = conf.stack.get(0);
+            
+            Configuration store_val = conf.clone();
+            store_val.code.pop();
+            store_val.stack.pop();
+            store_val.store.put(store.x, val.se);
+            
+            Configuration store_z = conf.clone();
+            store_z.code.pop();
+            store_z.stack.pop();
+            store_z.store.put(store.x, SignExc.Z);
+            
+            Configuration err = conf.clone();
+            err.code.pop();
+            err.stack.pop();
+            err.invalidstate = true;
+            
+            if (conf.invalidstate == false)
             {
-                Store storeinst = (Store) inst;
-                StackValue val = res.stack.pop();
-                // System.out.println("stored " + val.intval);
-                if (val.se == SignExc.ERR_A)
+                if (val.se == SignExc.ANY_A) // we dont want to store ANY because ERR <= ANY, so we store Z
                 {
-                    res.invalidstate = true;
-                    result.add(res);
+                    results.add(store_z);
                 }
-                else if (val.se == SignExc.ANY_A)
+                else if (ops.possiblyInt(val.se)) // but we do want to store other non-error values
                 {
-                    Configuration newres = res.clone();
-                    res.invalidstate = true;
-                    result.add(res);
-                    newres.invalidstate = false;
-                    newres.store.put(storeinst.x, SignExc.Z);
-                    result.add(newres);
+                    results.add(store_val);
                 }
-                else
+                
+                if (ops.possiblyAErr(val.se)) // ERR or ANY
                 {
-                    res.store.put(storeinst.x, val.se);
-                    result.add(res);
-                    System.out.println("stored: " + val.se);
+                    results.add(err);
                 }
             }
             else
             {
-                res.invalidstate = true;
-                result.add(res);
+                results.add(err);
             }
+            
+            return results;
         }
         else if (inst instanceof Fetch)
         {
-            if (res.invalidstate == false)
+            Configuration next = conf.clone();
+            next.code.pop();
+            
+            if (conf.invalidstate == false)
             {
                 Fetch fetch = (Fetch) inst;
-                if (res.store.get(fetch.x) == SignExc.ERR_A)
+                
+                if (conf.store.containsKey(fetch.x))
                 {
-                    res.invalidstate = true;
-                    result.add(res);
+                    next.stack.push(new StackValue(conf.store.get(fetch.x)));
                 }
-                else {
-                    if (res.store.get(fetch.x) == null) {
-                        res.stack.push(new StackValue(SignExc.Z));
-                        result.add(res);
-                    } else {
-                        res.stack.push(new StackValue(res.store.get(fetch.x)));
-                        result.add(res);
-                        System.out.println("fetched " + fetch.x + " with value " + res.store.get(fetch.x));
-                    }
+                else
+                {
+                    next.stack.push(new StackValue(SignExc.Z));
                 }
             }
+            else
+            {
+                next.stack.push(new StackValue(SignExc.ERR_A));
+            }
+            
+            results.add(next);
+            return results;
         }
         else
         {
             System.out.println("Unknown instruction!!!!!!!!!! " + inst.getClass().getName());
+            return null;
         }
-        //System.out.println("result is: " + result);
-        return result;
     }
 
     public int getNumControlPoints(Collection<Inst> code)
